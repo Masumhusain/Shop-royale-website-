@@ -4,6 +4,7 @@ const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const path = require('path');
 const methodOverride = require('method-override');
@@ -44,6 +45,14 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Session configuration
 app.use(session({
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI ,
+     crypto: {
+    secret:process.env.SECRET
+  },
+  touchAfter: 24 * 3600
+    
+  }),
   secret: process.env.SESSION_SECRET || 'royal-secret-key',
   resave: false,
   saveUninitialized: false,
